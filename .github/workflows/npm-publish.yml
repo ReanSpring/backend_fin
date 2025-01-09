@@ -46,3 +46,8 @@ jobs:
     # Step 7: Check the status of the running containers
     - name: Check running containers
       run: docker ps
+
+    # Step 8: Capture logs if the job fails
+    - name: Capture logs
+      if: failure()
+      run: docker logs node-app
