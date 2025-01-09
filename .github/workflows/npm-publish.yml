@@ -61,3 +61,7 @@ jobs:
     - name: Capture logs
       if: failure()
       run: docker logs node-app
+
+    # Step 10: Capture logs of the running container
+    - name: Capture logs of the running container
+      run: docker logs node-app
