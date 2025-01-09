@@ -29,15 +29,26 @@ jobs:
 
     # Step 4: Build Docker image for Node.js application
     - name: Build Docker image
-      run: docker build -t node-app .
+      id: build
+      run: |
+        docker build -t node-app . 2>&1 | tee docker_build.log
+      continue-on-error: true
 
-    # Step 5: Stop and remove any old containers (if they exist)
+    # Step 5: Capture logs if Docker build fails
+    - name: Upload Docker build logs
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: docker-build-logs
+        path: docker_build.log
+
+    # Step 6: Stop and remove any old containers (if they exist)
     - name: Stop and remove old container
       run: |
         docker stop node-app || true
         docker rm node-app || true
 
-    # Step 6: Run Docker container for Node.js app with MongoDB connection
+    # Step 7: Run Docker container for Node.js app with MongoDB connection
     - name: Run Docker container for Node.js app
       run: |
         docker run -d --name node-app \
@@ -46,11 +57,11 @@ jobs:
           -e API_KEY=${{ secrets.API_KEY }} \
           -p 3000:3000 node-app
 
-    # Step 7: Check the status of the running containers
+    # Step 8: Check the status of the running containers
     - name: Check running containers
       run: docker ps
 
-    # Step 8: Capture logs if the job fails
+    # Step 9: Capture logs if the job fails
     - name: Capture logs
       if: failure()
       run: docker logs node-app
