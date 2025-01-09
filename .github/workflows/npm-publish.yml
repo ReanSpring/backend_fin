@@ -46,12 +46,12 @@ jobs:
 
     # Step 7: Run Docker container for Node.js app with MongoDB connection
     - name: Run Docker container for Node.js app
-      run: |
-        docker run -d --name node-app \
-          -e MONGODB_URI=${{ secrets.MONGODB_URI }} \
-          -e DB_NAME=${{ secrets.DB_NAME }} \
-          -e API_KEY=${{ secrets.API_KEY }} \
-          -p 3000:3000 node-app
+  run: |
+    docker run -d --name node-app \
+      -e MONGODB_URI=mongodb://152.42.193.252:27017/findatabase \
+      -e DB_NAME=findatabase \
+      -e API_KEY=year4Bigwin \
+      -p 3000:3000 node-app
 
     # Step 8: Check the status of the running container
     - name: Check running containers
