@@ -48,7 +48,7 @@ jobs:
     - name: Run Docker container for Node.js app
       run: |
         docker run -d --name node-app \
-          -e MONGODB_URI=mongodb://152.42.193.252:27017/findatabase \
+          -e MONGODB_URI=mongodb://localhost:27017/findatabase \
           -e DB_NAME=${{ secrets.DB_NAME }} \
           -e API_KEY=${{ secrets.API_KEY }} \
           -p 3000:3000 node-app
