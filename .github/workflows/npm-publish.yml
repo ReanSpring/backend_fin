@@ -65,6 +65,15 @@ jobs:
     - name: Install newman
       run: npm install -g newman
 
+    # Step 10: Run Postman tests using newman
+    - name: Run Postman tests
+      run: |
+        # Wait for the container to be fully up and running
+        sleep 10
+
+        # Run Postman tests
+        newman run ./tests/your_postman_collection.json --env-var "baseUrl=http://152.42.193.252:3000"
+
     # Step 11: Capture logs if the job fails
     - name: Capture logs
       if: failure()
