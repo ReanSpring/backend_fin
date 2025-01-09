@@ -3,47 +3,46 @@ name: Deploy Node.js Application
 on:
   push:
     branches:
-      - main  # Trigger the workflow on push to the main branch
+      - main  # Trigger deployment when changes are pushed to the main branch
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    # Step 1: Check out the repository
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'  # Switch to Node.js LTS version
-          
-      - name: Cache Node.js modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
+    # Step 2: Set up Node.js environment
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
 
-      - name: Install dependencies
-        run: npm ci  # or `npm install`
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: npm ci  # Installs dependencies based on package-lock.json
 
-      - name: Run Tests
-        run: npm test  # Run tests (optional)
+    # Step 4: Build Docker image for Node.js application
+    - name: Build Docker image
+      run: docker build -t node-app .
 
-      - name: Build Docker image
-        run: docker build -t node-app:${{ github.sha }} .
+    # Step 5: Stop and remove any old containers (if they exist)
+    - name: Stop and remove old container
+      run: |
+        docker stop node-app || true
+        docker rm node-app || true
 
-      - name: Stop and remove old container
-        run: |
-          docker stop node-app || true
-          docker rm node-app || true
+    # Step 6: Run Docker container for Node.js app with MongoDB connection
+    - name: Run Docker container for Node.js app
+      run: |
+        docker run -d --name node-app \
+          -e MONGODB_URI=mongodb://152.42.193.252:27017/findatabase \
+          -e DB_NAME=${{ secrets.DB_NAME }} \
+          -e API_KEY=${{ secrets.API_KEY }} \
+          -p 3000:3000 node-app
 
-      - name: Deploy Docker container with MongoDB connection
-        run: |
-          docker run -d -p 3000:3000 --name node-app \
-            -e DATABASE_URL=mongodb://mongo:27017/findatabase \
-            -e API_KEY=${{ secrets.API_KEY }} \
-            --link mongo:mongo \
-            node-app:${{ github.sha }}
+    # Step 7: Check the status of the running containers
+    - name: Check running containers
+      run: docker ps

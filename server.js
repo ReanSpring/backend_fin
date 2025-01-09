@@ -9,12 +9,13 @@ const monthlyRoutes = require('./src/route/monthlyRoute');
 const yearlyRoutes = require('./src/route/yearlyRoute');
 const authRoutes = require('./src/route/authRoute');
 const authMiddleware = require('./src/middleware/authMiddleware');
-
+require('dotenv').config(); // Import dotenv
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Read port from .env
 
-mongoose.connect('mongodb://localhost:27017/findatabase')
+// Use the MongoDB URI from environment variable or default to the provided IP address
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://152.42.193.252:27017/findatabase')
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Could not connect to MongoDB', err));
 
