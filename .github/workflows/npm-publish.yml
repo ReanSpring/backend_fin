@@ -3,65 +3,65 @@ name: Deploy Node.js Application
 on:
   push:
     branches:
-      - main  # Trigger deployment when changes are pushed to the main branch
+      - main # Trigger deployment when changes are pushed to the main branch
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Change to 'self-hosted' if using a self-hosted runner
+    runs-on: ubuntu-latest # Change to 'self-hosted' if using a self-hosted runner
 
     steps:
-    # Step 1: Check out the repository
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    # Step 2: Set up Node.js environment
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
 
-    # Step 3: Install dependencies
-    - name: Install dependencies
-      run: npm ci  # Installs dependencies based on package-lock.json
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm ci # Installs dependencies based on package-lock.json
 
-    # Step 4: Build Docker image for Node.js application
-    - name: Build Docker image
-      id: build
-      run: |
-        docker build -t node-app . 2>&1 | tee docker_build.log
+      # Step 4: Build Docker image for Node.js application
+      - name: Build Docker image
+        id: build
+        run: |
+          docker build -t node-app . 2>&1 | tee docker_build.log
 
-    # Step 5: Capture logs if Docker build fails
-    - name: Upload Docker build logs
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: docker-build-logs
-        path: docker_build.log
+      # Step 5: Capture logs if Docker build fails
+      - name: Upload Docker build logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-build-logs
+          path: docker_build.log
 
-    # Step 6: Stop and remove any old containers (if they exist)
-    - name: Stop and remove old container
-      run: |
-        docker stop node-app || true
-        docker rm node-app || true
+      # Step 6: Stop and remove any old containers (if they exist)
+      - name: Stop and remove old container
+        run: |
+          docker stop node-app || true
+          docker rm node-app || true
 
-    # Step 7: Run Docker container for Node.js app with MongoDB connection
-    - name: Run Docker container for Node.js app
-  run: |
-    docker run -d --name node-app \
-      -e MONGODB_URI=mongodb://152.42.193.252:27017/findatabase \
-      -e DB_NAME=findatabase \
-      -e API_KEY=year4Bigwin \
-      -p 3000:3000 node-app
+      # Step 7: Run Docker container for Node.js app with MongoDB connection
+      - name: Run Docker container for Node.js app
+        run: |
+          docker run -d --name node-app \
+            -e MONGODB_URI=mongodb://152.42.193.252:27017/findatabase \
+            -e DB_NAME=findatabase \
+            -e API_KEY=year4Bigwin \
+            -p 3000:3000 node-app
 
-    # Step 8: Check the status of the running container
-    - name: Check running containers
-      run: docker ps
+      # Step 8: Check running containers
+      - name: Check running containers
+        run: docker ps
 
-    # Step 9: Capture logs if the job fails
-    - name: Capture logs
-      if: failure()
-      run: docker logs node-app
+      # Step 9: Capture logs if the job fails
+      - name: Capture logs
+        if: failure()
+        run: docker logs node-app
 
-    # Step 10: Capture logs of the running container
-    - name: Capture logs of the running container
-      run: docker logs node-app
+      # Step 10: Capture logs of the running container
+      - name: Capture logs of the running container
+        run: docker logs node-app
