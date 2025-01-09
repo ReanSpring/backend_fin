@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Change to 'self-hosted' if using a self-hosted runner
 
     steps:
     # Step 1: Check out the repository
@@ -19,9 +19,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '20'
-        always-auth: false
-        check-latest: false
-        token: ${{ secrets.GITHUB_TOKEN }}
 
     # Step 3: Install dependencies
     - name: Install dependencies
@@ -32,7 +29,6 @@ jobs:
       id: build
       run: |
         docker build -t node-app . 2>&1 | tee docker_build.log
-      continue-on-error: true
 
     # Step 5: Capture logs if Docker build fails
     - name: Upload Docker build logs
