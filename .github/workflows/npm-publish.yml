@@ -49,8 +49,8 @@ jobs:
       run: |
         docker run -d --name node-app \
           -e MONGODB_URI=mongodb://localhost:27017/findatabase \
-          -e DB_NAME=${{ secrets.DB_NAME }} \
-          -e API_KEY=${{ secrets.API_KEY }} \
+          -e DB_NAME=findatabase \
+          -e API_KEY=year4Bigwin \
           -p 3000:3000 node-app
 
     # Step 8: Check the status of the running container
