@@ -1,4 +1,4 @@
-const connection = require('../server'); // Adjust the path as necessary
+const connection = require('../../server'); // Adjust the path as necessary
 
 // Create the users table if it doesn't exist
 const createUserTable = `

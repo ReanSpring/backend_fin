@@ -1,14 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors'); // Import cors
-const userRoutes = require('./route/userRoute');
-const incomeRoutes = require('./route/incomeRoute');
-const outcomeRoutes = require('./route/outcomeRoute');
-const dailiesRoutes = require('./route/dailyRoute');
-const monthlyRoutes = require('./route/monthlyRoute');
-const yearlyRoutes = require('./route/yearlyRoute');
-const authRoutes = require('./route/authRoute');
-const authMiddleware = require('./middleware/authMiddleware');
+const userRoutes = require('./src/route/userRoute');
+const incomeRoutes = require('./src/route/incomeRoute');
+const outcomeRoutes = require('./src/route/outcomeRoute');
+const dailiesRoutes = require('./src/route/dailyRoute');
+const monthlyRoutes = require('./src/route/monthlyRoute');
+const yearlyRoutes = require('./src/route/yearlyRoute');
+const authRoutes = require('./src/route/authRoute');
+const authMiddleware = require('./src/middleware/authMiddleware');
+
 
 const app = express();
 const port = 3000;
