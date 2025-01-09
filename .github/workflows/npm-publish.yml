@@ -37,7 +37,7 @@ jobs:
     # Step 5: Capture logs if Docker build fails
     - name: Upload Docker build logs
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: docker-build-logs
         path: docker_build.log
