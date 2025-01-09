@@ -53,7 +53,7 @@ jobs:
           -e API_KEY=${{ secrets.API_KEY }} \
           -p 3000:3000 node-app
 
-    # Step 8: Check the status of the running containers
+    # Step 8: Check the status of the running container
     - name: Check running containers
       run: docker ps
 
