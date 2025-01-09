@@ -61,12 +61,7 @@ jobs:
     - name: Check running containers
       run: docker ps
 
-    # Step 9: Install newman
-    - name: Install newman
-      run: npm install -g newman
-
-
-    # Step 11: Capture logs if the job fails
+    # Step 9: Capture logs if the job fails
     - name: Capture logs
       if: failure()
       run: docker logs node-app
